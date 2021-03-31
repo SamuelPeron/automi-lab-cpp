@@ -10,7 +10,15 @@ using namespace std;
  *            Number of states in the DFA.
  */
 AbstractDFA::AbstractDFA(int noStates) {
-	// TODO: initialize data structures
+    // TODO: initialize data structures
+    this->currentState = 0;
+
+    for (int i = 0; i < noStates; i++) {
+        State s = State();
+        s.index = i;
+        s.final = false;
+        this->states[i] = s;
+    }
 }
 
 /**
@@ -18,6 +26,7 @@ AbstractDFA::AbstractDFA(int noStates) {
  */
 void AbstractDFA::reset() {
     // TODO: reset automaton to initial state
+    this->currentState = 0;
 }
 
 /**
@@ -31,6 +40,16 @@ void AbstractDFA::reset() {
  */
 void AbstractDFA::doStep(char letter) {
     // TODO: do step by going to the next state according to the current
+    if (this->currentState < 0)
+        return;
+
+    State s = this->states[this->currentState];
+    if (s.nexts.count(letter)) {
+        this->currentState = s.nexts[letter];
+    } else {
+        this->currentState = -1;
+    }
+
     // state and the read letter.
 }
 
@@ -41,7 +60,9 @@ void AbstractDFA::doStep(char letter) {
  */
 bool AbstractDFA::isAccepting() {
     // TODO: return if the current state is accepting
-    return false;
+    if (currentState < 0)
+        return false;
+    return this->states[this->currentState].final;
 }
 
 /**
@@ -73,8 +94,21 @@ WordDFA::WordDFA(const string &word) : AbstractDFA(0) {
     // TODO: fill in correct number of states
     
     // TODO: build DFA recognizing the given word
-}
 
+    State prec = State();
+    prec.final = false;
+    this->states.push_back(prec);
+
+    for (int i = 0; i < word.length(); i++) {
+        State next = State();
+        next.final = false;
+        prec.nexts[word[i]] = i;
+        this->states.push_back(next);
+        prec = next;
+    }
+    prec.final = true;
+}
+//CIAO
 /**
  * Construct a new DFA that recognizes comments within source code. There
  * are three kinds of comments: single line comment that starts with // and ends

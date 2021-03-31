@@ -8,6 +8,11 @@ using namespace std;
 
 typedef std::pair<int,char> tpair;
 
+struct State {
+	map<char, int> nexts;
+	bool final;
+};
+
 /**
  * Abstract class for Deterministic Finite Automata.
  */
@@ -17,7 +22,9 @@ class AbstractDFA {
 	// - final states (and sink states)
 	// - transitions of the form (state, input) -> state
 	// - current state
-    
+	public vector<State> states;
+	int currentState;
+	
 public:
 	/**
 	 * Constructor for Abstract DFA.
