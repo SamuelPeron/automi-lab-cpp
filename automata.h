@@ -22,10 +22,10 @@ class AbstractDFA {
 	// - final states (and sink states)
 	// - transitions of the form (state, input) -> state
 	// - current state
-	public vector<State> states;
-	int currentState;
 	
 public:
+	int currentState;
+	vector<State> states;
 	/**
 	 * Constructor for Abstract DFA.
 	 * 
@@ -82,7 +82,7 @@ public:
 	 * @param word
 	 *            A String that the automaton should recognize
 	 */
-	 WordDFA(const string &word);
+	WordDFA(const string &word);
 };
 
 /**
@@ -99,7 +99,9 @@ public:
 	 *  3. a multiline comment that starts with { and ends with }
 	 */
 	CommentDFA();
-	
+
+
+	const char DEFAULT_CHAR = '#';
 	/**
 	 * Performs one step of the DFA for a given letter. This method works
 	 * differently than in the superclass AbstractDFA.

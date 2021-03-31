@@ -15,7 +15,6 @@ AbstractDFA::AbstractDFA(int noStates) {
 
     for (int i = 0; i < noStates; i++) {
         State s = State();
-        s.index = i;
         s.final = false;
         this->states[i] = s;
     }
@@ -118,6 +117,96 @@ WordDFA::WordDFA(const string &word) : AbstractDFA(0) {
 CommentDFA::CommentDFA() : AbstractDFA(0) {
     // TODO: fill in correct number of states
     // TODO: build DFA recognizing comments
+
+    State q0 = State();
+    q0.final = false;
+    q0.nexts['/'] = 1;
+    q0.nexts['{'] = 3;
+    q0.nexts['('] = 5;
+    this->states.push_back(q0);
+
+
+    // Comment //
+    State q1 = State();
+    q1.final = false;
+    q1.nexts['/'] = 2;
+    this->states.push_back(q1);
+
+    State q2 = State();
+    q2.final = false;
+    q2.nexts['/'] = 2;
+    q2.nexts['('] = 2;
+    q2.nexts[')'] = 2;
+    q2.nexts['*'] = 2;
+    q2.nexts['{'] = 2;
+    q2.nexts['}'] = 2;
+    q2.nexts['#'] = 2;
+    q2.nexts['\n'] = 10;
+    this->states.push_back(q2);
+
+    State q3 = State();
+    q3.final = true;
+    this->states.push_back(q3); 
+
+    // Comment { }
+    State q4 = State();
+    q4.final = false;
+    q4.nexts['/'] = 3;
+    q4.nexts['('] = 3;
+    q4.nexts[')'] = 3;
+    q4.nexts['*'] = 3;
+    q4.nexts['{'] = 3;
+    q4.nexts['#'] = 3;
+    q4.nexts['\n'] = 3;
+    q4.nexts['}'] = 4;
+    this->states.push_back(q4);
+
+    State q5 = State();
+    q5.final = true;
+    q5.nexts['{'] = 3;
+    this->states.push_back(q5);
+
+
+    // Comment (* *)
+    State q6 = State();
+    q6.final = false;
+    q6.nexts['*'] = 6;
+    this->states.push_back(q6);
+
+    State q7 = State();
+    q7.final = false;
+    q7.nexts['/'] = 6;
+    q7.nexts['('] = 6;
+    q7.nexts[')'] = 6;
+    q7.nexts['{'] = 6;
+    q7.nexts['}'] = 6;
+    q7.nexts['#'] = 6;
+    q7.nexts['\n'] = 6;
+    q7.nexts['*'] = 7;
+    this->states.push_back(q7);
+
+    State q8 = State();
+    q8.final = false;
+    q8.nexts['/'] = 6;
+    q8.nexts['('] = 6;
+    q8.nexts['{'] = 6;
+    q8.nexts['}'] = 6;
+    q8.nexts['#'] = 6;
+    q8.nexts['\n'] = 6;
+    q8.nexts['*'] = 7;
+    q8.nexts[')'] = 8;
+    this->states.push_back(q8);
+
+    State q9 = State();
+    q9.final = true;
+    q9.nexts['('] = 9;
+    this->states.push_back(q9);
+
+    State q10 = State();
+    q10.final = true;
+    q10.nexts['*'] = 6;
+    this->states.push_back(q10);
+
 }
 
 /**
@@ -129,6 +218,17 @@ CommentDFA::CommentDFA() : AbstractDFA(0) {
  */
 void CommentDFA::doStep(char letter) {
     // TODO: implement accordingly
-}	
+    if (
+        letter != '/' &&
+        letter != '(' &&
+        letter != ')' &&
+        letter != '*' &&
+        letter != '{' &&
+        letter != '}' &&
+        letter != '\n'
+        )
+        letter = this->DEFAULT_CHAR;
+    AbstractDFA::doStep(letter);
+}
 
 
